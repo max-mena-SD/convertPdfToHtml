@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.9.359/pdf.min.js"></script>
+  </head>
+  <body>
+    <script>
+      // Load the PDF document
+      const url = "example.pdf";
+      const loadingTask = pdfjsLib.getDocument(url);
+
+      loadingTask.promise.then(
+        function (pdf) {
+          const totalPages = pdf.numPages;
+
+          // Load the first page
+          for (let i = 1; i <= totalPages; i++) {
+            pdf.getPage(i).then(function (page) {
+              // Get the text content of the page
+              page.getTextContent().then(function (textContent) {
+                // Convert the text content to a string
+                const textItems = textContent.items;
+                let text = "";
+                for (let i = 0; i < textItems.length; i++) {
+                  text += textItems[i].str + " ";
+                }
+                // console.log(text);
+                let pdfInfo = document.createElement("p");
+                pdfInfo.innerHTML = text;
+                document.body.appendChild(pdfInfo);
+              });
+            });
+          }
+        },
+        function (error) {
+          console.error(error);
+        }
+      );
+    </script>
+  </body>
+</html>
